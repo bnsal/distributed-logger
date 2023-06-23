@@ -24,7 +24,7 @@ class DistributedLoggingController
             "clientIp:" => @$this->clientIp(),
             "machineIp" => @$_SERVER['SERVER_ADDR'],
             "response_status_code" => null,
-
+            "on_slack" => null,
 
             "data" => [
                 "request_hashes" => [],
@@ -67,10 +67,14 @@ class DistributedLoggingController
         if( $record['level'] >= config( 'bnsallogging.log_print_level_index' ) ) {
             $this->should_dump = true;
         }
+        if( $record['level'] >= config( 'bnsallogging.slack_level_index' ) ) {
+            $this->object['on_slack'] = true;
+        }
 
         $msg = [];
         $msg['message'] = $record['message'];
         if( isset($record['context']) && isset($record['context']['exception']) && $record['context']['exception'] ) {
+            $this->object['on_slack'] = true;
             $this->should_pretty_print = true;
             $exception = $record['context']['exception'];
             $msg['exception'] = sprintf(

@@ -33,6 +33,18 @@ class DistributedLoggingQueueJob implements ShouldQueue {
      * @return void
      */
     public function handle() {
-        \Log::stack( config('bnsallogging.logging_channel', ['stack']) )->emergency($this->data);
+        try {
+            if( $this->data ) {
+                if( json_decode($this->data)->on_slack ) {
+                    \Log::stack( config('bnsallogging.slack_channel', ['stack']) )->emergency($this->data);
+                }
+            }
+
+            \Log::stack( config('bnsallogging.logging_channel', ['stack']) )->emergency($this->data);
+        } catch ( \Exception $e ) {
+            \Log::stack( config('bnsallogging.logging_channel', ['stack']) )->emergency($e);
+        }
+
+        
     }
 }

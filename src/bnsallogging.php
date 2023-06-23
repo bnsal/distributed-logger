@@ -10,16 +10,21 @@ use Monolog\Logger;
 
 return [
 
-    'queue_enabled' => false,
+    'queue_enabled' => true,
 
-    'queue_driver' => null,
+    'queue_driver' => "sqs",
 
-    'disable_default_logging' => false,
+    'disable_default_logging' => true,
 
-    'logging_channel' => ['stack'],
+    'logging_channel' => [ 'single' ],
 
     'log_level' => Logger::DEBUG,
 
     'log_print_level_index' => 10,
+
+    /*Slack config*/
+    'slack_channel' => [ 'errorsr' ],
+
+    'slack_level_index' => 201,
 
 ];
